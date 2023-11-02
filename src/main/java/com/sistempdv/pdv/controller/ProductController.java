@@ -5,26 +5,46 @@ import com.sistempdv.pdv.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/products")
 public class ProductController {
+
     @Autowired
     private ProductService productService;
 
     @GetMapping(value = "/{id}")
-    public ProductRecord findById(@PathVariable Long id) {
-        return productService.findById(id);
+    public ResponseEntity<ProductRecord> findById(@PathVariable Long id) {
+        ProductRecord productRecord = productService.findById(id);
+        return ResponseEntity.ok(productRecord);
     }
 
     @GetMapping
-    public Page<ProductRecord> findAll(Pageable pageable) {
-        return productService.findAll(pageable);
+    public ResponseEntity<Page<ProductRecord>> findAll(Pageable pageable) {
+        Page<ProductRecord> productRecord = productService.findAll(pageable);
+        return ResponseEntity.ok(productRecord);
+
+    }
+
+    public ResponseEntity<ProductRecord> insert(@RequestBody ProductRecord productRecord){
+        productRecord = productService.insert(productRecord);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(productRecord.id()).toUri();
+        return ResponseEntity.created(uri).body(productRecord);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductRecord> update(@PathVariable Long id, @RequestBody ProductRecord productRecord) {
+        productRecord = productService.update(id, productRecord);
+        return ResponseEntity.ok(productRecord);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

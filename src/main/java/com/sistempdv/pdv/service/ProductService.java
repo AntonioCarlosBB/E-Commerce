@@ -29,4 +29,32 @@ public class ProductService {
         Page<Product> productList = productRepository.findAll(pageable);
         return productList.map(ProductRecord::new);
     }
+
+    @Transactional
+    public ProductRecord insert(ProductRecord productRecord){
+        Product entity = new Product();
+        copyRecordToEntity(productRecord, entity);
+        entity = productRepository.save(entity);
+        return new ProductRecord(entity);
+    }
+
+    @Transactional
+    public ProductRecord update(Long id, ProductRecord productRecord){
+        Product entity = productRepository.getReferenceById(id);
+        copyRecordToEntity(productRecord, entity);
+        entity = productRepository.save(entity);
+        return new ProductRecord(entity);
+    }
+
+    public void delete(Long id){
+        productRepository.deleteById(id);
+    }
+
+
+    private void copyRecordToEntity(ProductRecord productRecord, Product entity) {
+        entity.setName(productRecord.name());
+        entity.setDescription(productRecord.description());
+        entity.setPrice(productRecord.price());
+        entity.setImgUrl(productRecord.imgUrl());
+    }
 }
