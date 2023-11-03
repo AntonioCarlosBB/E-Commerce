@@ -30,6 +30,7 @@ public class ProductController {
 
     }
 
+    @PostMapping
     public ResponseEntity<ProductRecord> insert(@RequestBody ProductRecord productRecord){
         productRecord = productService.insert(productRecord);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(productRecord.id()).toUri();
