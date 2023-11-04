@@ -2,6 +2,7 @@ package com.sistempdv.pdv.controller;
 
 import com.sistempdv.pdv.record.ProductRecord;
 import com.sistempdv.pdv.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,14 +32,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductRecord> insert(@RequestBody ProductRecord productRecord){
+    public ResponseEntity<ProductRecord> insert(@Valid @RequestBody ProductRecord productRecord){
         productRecord = productService.insert(productRecord);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(productRecord.id()).toUri();
         return ResponseEntity.created(uri).body(productRecord);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductRecord> update(@PathVariable Long id, @RequestBody ProductRecord productRecord) {
+    public ResponseEntity<ProductRecord> update(@PathVariable Long id, @Valid @RequestBody ProductRecord productRecord) {
         productRecord = productService.update(id, productRecord);
         return ResponseEntity.ok(productRecord);
     }

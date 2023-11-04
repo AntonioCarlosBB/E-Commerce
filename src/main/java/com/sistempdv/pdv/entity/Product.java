@@ -1,6 +1,9 @@
 package com.sistempdv.pdv.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -20,9 +23,17 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Campo obrigatório")
+    @Size(min = 3, max = 80, message = "Min 3 letras")
     private String name;
+
     @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Campo obrigatório")
+    @Size(min = 10)
     private String description;
+
+    @Positive(message = "O preço precisa ser positivo")
     private Double price;
     private String imgUrl;
 
